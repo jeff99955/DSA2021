@@ -7,8 +7,8 @@ N = int(5e4) # number of words in dictionary
 M = int(1e2) # max length of a sentence
 Q = int(4e3)
 U = int(6e3)
-stringset, commands= [], []
-idsset = set() # words in disjoint set
+stringset, commands, answers = [], [], []
+idsset = [] # words in disjoint set
 command_seq = ''
 charset = string.digits + string.ascii_letters
 ds = DisjointSet()
@@ -33,8 +33,8 @@ def rand_lang(length: int):
 def hit_lang(length: int):
     a, b = '', ''
     for i in range(length):
-        wa = random.choice(tuple(idsset))
-        wb = random.choice(tuple([i for i in idsset if ds.connected(wa, i)]))
+        wa = random.choice(idsset)
+        wb = random.choice([i for i in idsset if ds.connected(wa, i)])
         a += wa; b += wb
     return a, b
 
@@ -47,19 +47,26 @@ def rand_len() -> int:
 
 def generate_union():
     a, b = rand_str(), rand_str()
-    idsset.add(a); idsset.add(b)
+    idsset.append(a); idsset.append(b)
     commands.append(('union', a, b))
     ds.union(a, b)
 
 def generate_random_strcmp():
     l = rand_len()
-    a, b= rand_lang(l)
+    a, b = rand_lang(l)
+    same = True
+    for i in range(l):
+        if not ds.connected(a[4 * i: 4 * (i+1)], b[4 * i: 4 * (i+1)]):
+            same = False 
+            break
     commands.append(('compare', a, b))
+    answers.append(same)
     
 def generate_hit_strcmp():
     l = rand_len()
     a, b = hit_lang(l)
     commands.append(('compare', a, b))
+    answers.append(True)
 
 def main():
     global command_seq
@@ -90,9 +97,9 @@ def main():
     print(Q+U, file=fin)
     for i in range(Q+U):
         c = commands[i]
+        a = answers[i]
         print(f"{c[0]} {c[1]} {c[2]}", file = fin)
-        if command_seq[i] == 's': print("True", file = fout)
-        elif command_seq[i] == 'c': print("False", file = fout)
-
+        print(f"{a}", file = fout)
+        
 if __name__ == "__main__":
     main()
