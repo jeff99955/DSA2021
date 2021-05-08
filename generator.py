@@ -3,10 +3,10 @@ import string
 from tqdm import trange
 from disjoint_set import DisjointSet
 
-N = int(5e2) # number of words in dictionary
-M = int(1e1) # max length of a sentence
-Q = int(4e0)
-U = int(6e0)
+N = int(5e4) # number of words in dictionary
+M = int(1e2) # max length of a sentence
+Q = int(4e3)    
+U = int(6e3)
 stringset, commands= [], []
 idsset = set() # words in disjoint set
 command_seq = ''

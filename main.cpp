@@ -52,7 +52,6 @@ int main(){
             link(a, b); 
         } else {
             int len = a.length() / 4;
-            cout << "len of " << a << "= " << a.length();
             bool same = true;
             for (int j = 0; j < len; j++) {
                 string ra = a.substr(j * 4, 4), rb = b.substr(j * 4, 4);
@@ -64,8 +63,10 @@ int main(){
             if(same) cout << "True\n";
             else cout << "False\n";
         }
+#ifdef EBUG
         for (auto s : ds) {
             cout << s.first << ' ' << find_set(s.first) << '\n';
         }
+#endif
     }
 }

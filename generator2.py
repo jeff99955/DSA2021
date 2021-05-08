@@ -3,6 +3,7 @@ import string
 from tqdm import trange
 from disjoint_set import DisjointSet
 
+
 N = int(5e4) # number of words in dictionary
 M = int(1e2) # max length of a sentence
 Q = int(4e3)
