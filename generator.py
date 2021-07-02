@@ -2,8 +2,9 @@ import random
 import string
 from tqdm import trange
 from disjoint_set import DisjointSet
+import sys
 
-N = int(5e4) # number of words in dictionary
+N = int(5e5) # number of words in dictionary
 M = int(1e2) # max length of a sentence
 Q = int(4e3)    
 U = int(6e3)
@@ -20,7 +21,7 @@ def rand_type(prob: float):
     r = random.uniform(0, 1)
     if r < prob:
         s = random.uniform(0, 1)
-        return 'c' if s < 0.5 else 's'
+        return 'c' if s < 0.99 else 's'
     return 'u'
 
 def rand_lang(length: int):
@@ -53,7 +54,13 @@ def generate_union():
 
 def generate_random_strcmp():
     l = rand_len()
+    wa = random.choice(tuple(idsset))
+    wb = random.choice(tuple([i for i in idsset if ds.connected(wa, i)]))
     a, b= rand_lang(l)
+    
+    s = random.uniform(0, 1)
+    if s < 0.04:
+        a, b = wa + a, wb + b
     commands.append(('compare', a, b))
     
 def generate_hit_strcmp():
@@ -63,10 +70,14 @@ def generate_hit_strcmp():
 
 def main():
     global command_seq
+    argv = sys.argv
+    if len(argv) < 2:
+        print(f"usage: {argv[0]} n_gen")
+        sys.exit(0)
     # generate the dictionary of words
     while len(stringset) < N:
         stringset.append(rand_str())
-
+        
     # generate the sequence for testcase, indicator only
     for i in range(Q + U):
         if i < ((Q + U) // 10): command_seq += 'u'
@@ -83,16 +94,13 @@ def main():
         elif c == 'c': generate_random_strcmp()
         else: generate_hit_strcmp()
     # write all commands into file
-    file_num = 0
+    file_num = int(argv[1])
     fin = open(f'{file_num}.in', 'w')
-    fout = open(f'{file_num}.out', 'w')
 
     print(Q+U, file=fin)
     for i in range(Q+U):
         c = commands[i]
         print(f"{c[0]} {c[1]} {c[2]}", file = fin)
-        if command_seq[i] == 's': print("True", file = fout)
-        elif command_seq[i] == 'c': print("False", file = fout)
 
 if __name__ == "__main__":
     main()

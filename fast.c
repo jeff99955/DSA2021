@@ -41,9 +41,13 @@ inline void static init(int s) {
 int find_set(int s) {
     init(s);
     int i = s; // hash(s);
-    if (ds[i].parent != s) {
-        ds[i].parent = find_set(ds[i].parent);
+    while (ds[i].parent != i) {
+        ds[i].parent = ds[ds[i].parent].parent;
+        i = ds[i].parent;
     }
+    // if (ds[i].parent != s) {
+    //     ds[i].parent = find_set(ds[i].parent);
+    // }
     return ds[i].parent;
 }
 

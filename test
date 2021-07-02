@@ -1,0 +1,11 @@
+#!/bin/bash
+n=$1
+python3 main.py < $n.in > $n.out
+echo finish generating the answer for $n
+# time ./slow < $n.in > $n.test.out
+# echo slow: `diff $n.out $n.test.out | wc -l`
+time ./fs < $n.in > $n.test.out
+echo fast correct: `diff $n.out $n.test.out | wc -l`
+time ./fb < $n.in > $n.test.out
+echo fast incorrect: `diff $n.out $n.test.out | wc -l`
+rm $n.test.out
